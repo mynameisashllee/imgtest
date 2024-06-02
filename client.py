@@ -1,14 +1,8 @@
-import socket
+from classes.Client import Client
 
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(('localhost', 1026))
+enc_key = "apples" # pre-determined shared key by clients
 
-file = open('apple.jpeg', 'rb')
-imgData = file.read(2048)
-
-while imgData:
-    client.send(imgData)
-    imgData = file.read(2048)
-
-file.close()
-client.close()
+if __name__ == "__main__":
+    print("Starting client...")
+    client = Client(enc_key)
+    client.start_client() 
