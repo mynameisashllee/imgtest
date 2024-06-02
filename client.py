@@ -1,7 +1,7 @@
 import socket
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(('localhost', 1025))
+client.connect(('localhost', 1026))
 
 file = open('apple.jpeg', 'rb')
 imgData = file.read(2048)
