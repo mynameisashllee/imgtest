@@ -31,9 +31,12 @@ class Client:
 
                 dest_id = packet['dest_id']
                 image_data = self.dec(packet['payload'], packet['nonce'])
-                with open(f"received_{dest_id}.jpg", "wb") as image_file:
+                folder_path = os.path.join("received_images", dest_id)
+                os.makedirs(folder_path, exist_ok=True)
+                image_path = os.path.join(folder_path, f"received_{dest_id}.jpg")
+                with open(image_path, "wb") as image_file:
                     image_file.write(image_data)
-                print(f"\nReceived an image from {dest_id} and saved as received_{dest_id}.jpg")
+                print(f"\nReceived an image from {dest_id} and saved as {image_path}")
 
             except socket.error:
                 print("Error receiving data")
@@ -57,6 +60,13 @@ class Client:
                 msglen = struct.pack('>I', len(byte_arr))
                 client_socket.sendall(msglen + byte_arr)
                 print(f"Sent image to {recipient_id}")
+
+                folder_path = os.path.join("sent_images", recipient_id)
+                os.makedirs(folder_path, exist_ok=True)
+                sent_image_path = os.path.join(folder_path, os.path.basename(image_path))
+                with open(sent_image_path, "wb") as sent_image_file:
+                    sent_image_file.write(image_data)
+                print(f"A copy of the sent image is saved as {sent_image_path}")
 
             except KeyboardInterrupt:
                 print("Exiting...")
