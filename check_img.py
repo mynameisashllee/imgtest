@@ -5,37 +5,37 @@ from PIL import Image
 import imagehash
 
 def setup_problematic_img(hashfunc=imagehash.phash):
-    directory = os.fsencode("problematic") # change this to the directory of problematic images
+    directory = "problematic"  # directory of problematic images
     img_formats = ('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.svg')
     problematic_img_hashes = []
 
     for file in os.listdir(directory):
-        dir_str = os.fsdecode(directory).lower()
-        filename = os.fsdecode(file).lower()
-        if filename.endswith(img_formats): 
+        filename = os.path.join(directory, file).lower()
+        if filename.endswith(img_formats):
             try:
-                hash = hashfunc(Image.open(dir_str + '/' + filename)) # might have to remove "\\" if images in same directory
-                problematic_img_hashes.append(hash)
+                img_hash = hashfunc(Image.open(filename))
+                problematic_img_hashes.append(img_hash)
             except Exception as e:
                 print('Problem:', e, 'with', filename)
                 continue
-        else:
-            continue
     
     return problematic_img_hashes
-    
-def check_img(problematic_img_hashes, img_path, hashfunc = imagehash.phash): 
+
+def check_img(problematic_img_hashes, img_path, hashfunc=imagehash.phash, threshold=5):
     try:
         img = Image.open(img_path)
-        hash = hashfunc(img)
+        img_hash = hashfunc(img)
     except Exception as e:
-        print('Error occured with reading file:', e)
+        print('Error occurred with reading file:', e)
+        return
     
-    if hash in problematic_img_hashes:
-        print("Image is problematic")
-    else:
-        print("Image is OK") # change this to send the message to the receiver
+    for p_hash in problematic_img_hashes:
+        if img_hash - p_hash <= threshold:
+            print("Image is problematic")
+            return
+    
+    print("Image is OK")
 
-problematic_img_hashes = setup_problematic_img()
-check_img(problematic_img_hashes, "applephotos/problemapplehsb.jpeg") # change img_path with the image received via socket
-
+if __name__ == '__main__':
+    problematic_img_hashes = setup_problematic_img()
+    check_img(problematic_img_hashes, "applephotos/problemapplerot.jpeg")  # change img_path with the image received via socket
