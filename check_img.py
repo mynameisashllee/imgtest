@@ -37,5 +37,5 @@ def check_img(problematic_img_hashes, img_path, hashfunc = imagehash.phash):
         print("Image is OK") # change this to send the message to the receiver
 
 problematic_img_hashes = setup_problematic_img()
-check_img(problematic_img_hashes, "problemapplecopy.jpeg") # change img_path with the image received via socket
+check_img(problematic_img_hashes, "applephotos/problemapplehsb.jpeg") # change img_path with the image received via socket
 
