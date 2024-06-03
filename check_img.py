@@ -5,7 +5,7 @@ from PIL import Image
 import imagehash
 
 def setup_problematic_img(hashfunc=imagehash.phash):
-    directory = os.fsencode("banana_dataset/banana") # change this to the directory of problematic images
+    directory = os.fsencode("problematic") # change this to the directory of problematic images
     img_formats = ('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.svg')
     problematic_img_hashes = []
 
@@ -14,7 +14,7 @@ def setup_problematic_img(hashfunc=imagehash.phash):
         filename = os.fsdecode(file).lower()
         if filename.endswith(img_formats): 
             try:
-                hash = hashfunc(Image.open(dir_str + "\\" + filename)) # might have to remove "\\" if images in same directory
+                hash = hashfunc(Image.open(dir_str + '/' + filename)) # might have to remove "\\" if images in same directory
                 problematic_img_hashes.append(hash)
             except Exception as e:
                 print('Problem:', e, 'with', filename)
@@ -37,5 +37,5 @@ def check_img(problematic_img_hashes, img_path, hashfunc = imagehash.phash):
         print("Image is OK") # change this to send the message to the receiver
 
 problematic_img_hashes = setup_problematic_img()
-check_img(problematic_img_hashes, "banana_dataset/0CNHV8VNNO2K_rot.jpg") # change img_path with the image received via socket
+check_img(problematic_img_hashes, "problemapplecopy.jpeg") # change img_path with the image received via socket
 
