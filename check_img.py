@@ -1,4 +1,4 @@
-# Modified from find_similar_images.py (https://github.com/JohannesBuchner/imagehash/blob/master/find_similar_images.py)
+# just checking images
 
 import os
 from PIL import Image
@@ -38,4 +38,4 @@ def check_img(problematic_img_hashes, img_path, hashfunc=imagehash.phash, thresh
 
 if __name__ == '__main__':
     problematic_img_hashes = setup_problematic_img()
-    check_img(problematic_img_hashes, "applephotos/problemapplerot.jpeg")  # change img_path with the image received via socket
+    check_img(problematic_img_hashes, "applephotos/problemapplemed.jpeg")  # change img_path with the image received via socket

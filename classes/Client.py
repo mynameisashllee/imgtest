@@ -5,6 +5,8 @@ import socket
 from .Message import Message
 import os
 import struct
+import subprocess
+import platform
 
 class Client:
     def __init__(self, enc_key):
@@ -19,12 +21,15 @@ class Client:
     def receive_message(self, client_socket):
         while True:
             try:
+                print("Waiting to receive message length...")
                 raw_msglen = self.recvall(client_socket, 4)
                 if not raw_msglen:
                     print("Server disconnected.")
                     break
                 msglen = struct.unpack('>I', raw_msglen)[0]
+                print(f"Message length received: {msglen}")
                 data = self.recvall(client_socket, msglen)
+                print("Message data received.")
                 message = Message()
                 message.bytes_to_msg(data)
                 packet = message.get_packet_data()
@@ -38,8 +43,11 @@ class Client:
                     image_file.write(image_data)
                 print(f"\nReceived an image from {dest_id} and saved as {image_path}")
 
-            except socket.error:
-                print("Error receiving data")
+                # Attempt to open the image
+                self.open_image(image_path)
+
+            except socket.error as e:
+                print(f"Error receiving data: {e}")
                 break
 
     def send_messages(self, client_socket):
@@ -72,8 +80,8 @@ class Client:
                 print("Exiting...")
                 break
 
-            except socket.error:
-                print("Error sending message.")
+            except socket.error as e:
+                print(f"Error sending message: {e}")
                 break
 
     def start_client(self):
@@ -115,3 +123,17 @@ class Client:
                 return None
             data.extend(packet)
         return data
+
+    def open_image(self, file_path):
+        current_os = platform.system()
+        try:
+            print(f"Attempting to open image on {current_os}...")
+            if current_os == 'Darwin':  # macOS
+                subprocess.call(['open', file_path])
+            elif current_os == 'Windows':  # Windows
+                os.startfile(file_path)
+            else:  # Linux
+                subprocess.call(['xdg-open', file_path])
+            print(f"Image opened successfully: {file_path}")
+        except Exception as e:
+            print(f"Failed to open image: {e}")

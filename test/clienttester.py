@@ -1,3 +1,4 @@
+# ignore! not imp
 import socket
 
 def register_and_send_image(username, recipient, file_path):
