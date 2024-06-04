@@ -28,7 +28,7 @@ while True:
         print("Enter file name of the image with extension (example: filename.jpg, filename.png or if a video file then filename.mpg etc) - ")
         fname = input()
         client_socket.send(fname.encode())
-        with open(fname, 'wb') as fp:
+        with open(fname, 'ab') as fp:
             while True:
                 strng = client_socket.recv(512)
                 if not strng:
